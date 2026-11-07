@@ -37,13 +37,16 @@ def wait_until_release():
 
 
 def main():
+    print("Main function started")
     now = datetime.datetime.now(SWEDEN)
-
+    print("Current Swedish time:", datetime.datetime.now(SWEDEN))
     if not (now.hour == 11 and 57 <= now.minute <= 59):
+        print("Booking time not yet")
         return
 
     print("Starting Fysiken bot...")
     fysiken = Fysiken()
+
     print("Fysiken authentication successful.")
 
     if not wait_until_release():
@@ -57,7 +60,6 @@ def main():
     fysiken.available_workouts = fysiken.get_workouts()
     print("Fetched workouts:", fysiken.available_workouts)
     fysiken.reserve_workouts()
-
 
 if __name__ == "__main__":
     main()

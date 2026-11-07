@@ -76,6 +76,3 @@ class Fysiken:
                     else:
                         print(f"Failed to book, retrying... \n{res}")
 
-
-fysiken = Fysiken()
-fysiken.reserve_workouts()

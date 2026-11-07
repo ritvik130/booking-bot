@@ -1,13 +1,18 @@
 
 name: Fysiken Booking Bot
 
-on:
-schedule:
-  - cron: '57 10 * * *'
-
-  - cron: '57 9 * * *'
-
+'on':
+  schedule:
+    - cron: "57 10 * * *"
+    - cron: "57 9 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fysiken-booking
+  cancel-in-progress: true
 
 jobs:
   booking:
@@ -20,10 +25,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r requirements.txt
 
       - name: Run booking bot
         env:

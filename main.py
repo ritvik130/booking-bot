@@ -42,7 +42,9 @@ def main():
     if not (now.hour == 11 and 57 <= now.minute <= 59):
         return
 
+    print("Starting Fysiken bot...")
     fysiken = Fysiken()
+    print("Fysiken authentication successful.")
 
     if not wait_until_release():
         return
@@ -53,6 +55,7 @@ def main():
     )
 
     fysiken.available_workouts = fysiken.get_workouts()
+    print("Fetched workouts:", fysiken.available_workouts)
     fysiken.reserve_workouts()
 
 

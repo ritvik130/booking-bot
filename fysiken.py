@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from time import sleep
 import requests
 
 session = requests.Session()
@@ -16,8 +17,8 @@ class Fysiken:
         self.user_id = user_info["id"]
 
         self.user_workouts = json.load(open(self.config_file, "r"))
-        self.next_available_date = datetime.date.today() + datetime.timedelta(days=8)
-        self.available_workouts = self.get_workouts()
+        self.next_available_date = None
+        self.available_workouts = {}
 
     def get_user_session(self):
         username = os.environ["USERNAME"]

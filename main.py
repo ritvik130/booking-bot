@@ -1,4 +1,3 @@
-
 import datetime
 import time
 from zoneinfo import ZoneInfo
@@ -9,7 +8,6 @@ SWEDEN = ZoneInfo("Europe/Stockholm")
 
 
 def wait_until_release():
-
     now = datetime.datetime.now(SWEDEN)
 
     release = now.replace(
@@ -18,6 +16,9 @@ def wait_until_release():
         second=0,
         microsecond=0
     )
+
+    if now >= release:
+        return False
 
     while True:
         remaining = (
@@ -32,16 +33,19 @@ def wait_until_release():
         else:
             time.sleep(0.01)
 
+    return True
+
 
 def main():
-
     now = datetime.datetime.now(SWEDEN)
 
-    if not (now.hour == 11 and now.minute >= 57 and now.minute <= 59):
+    if not (now.hour == 11 and 57 <= now.minute <= 59):
+        return
 
     fysiken = Fysiken()
 
-    wait_until_release()
+    if not wait_until_release():
+        return
 
     fysiken.next_available_date = (
         datetime.datetime.now(SWEDEN).date()
@@ -49,7 +53,6 @@ def main():
     )
 
     fysiken.available_workouts = fysiken.get_workouts()
-
     fysiken.reserve_workouts()
 
 

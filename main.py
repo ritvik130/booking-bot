@@ -6,51 +6,50 @@ from fysiken import Fysiken
 
 SWEDEN = ZoneInfo("Europe/Stockholm")
 
+WINDOW_START = (11, 30)                       
+RELEASE = (12, 0)                             
+LOGIN_LEAD = datetime.timedelta(seconds=60)   
+LATE_GRACE = datetime.timedelta(minutes=10)  
 
-def wait_until_release():
-    now = datetime.datetime.now(SWEDEN)
 
-    release = now.replace(
-        hour=12,
-        minute=0,
-        second=0,
-        microsecond=0
+def today_at(hour, minute=0):
+    return datetime.datetime.now(SWEDEN).replace(
+        hour=hour, minute=minute, second=0, microsecond=0
     )
 
-    if now >= release:
-        return False
 
+def sleep_until(target):
     while True:
-        remaining = (
-            release - datetime.datetime.now(SWEDEN)
-        ).total_seconds()
-
+        remaining = (target - datetime.datetime.now(SWEDEN)).total_seconds()
         if remaining <= 0:
-            break
-
+            return
         if remaining > 1:
             time.sleep(remaining - 0.5)
         else:
             time.sleep(0.01)
 
-    return True
-
 
 def main():
     print("Main function started")
     now = datetime.datetime.now(SWEDEN)
-    print("Current Swedish time:", datetime.datetime.now(SWEDEN))
-    if not (now.hour == 11 and 57 <= now.minute <= 59):
-        print("Booking time not yet")
+    print("Current Swedish time:", now)
+
+    release = today_at(*RELEASE)
+    window_start = today_at(*WINDOW_START)
+
+    if not (window_start <= now <= release + LATE_GRACE):
+        print("Outside booking window, exiting")
         return
+
+    # Wait, then log in shortly before release so the session is fresh
+    sleep_until(release - LOGIN_LEAD)
 
     print("Starting Fysiken bot...")
     fysiken = Fysiken()
-
     print("Fysiken authentication successful.")
 
-    if not wait_until_release():
-        return
+    # Returns immediately if we're already past noon (late start)
+    sleep_until(release)
 
     fysiken.next_available_date = (
         datetime.datetime.now(SWEDEN).date()
@@ -60,6 +59,7 @@ def main():
     fysiken.available_workouts = fysiken.get_workouts()
     print("Fetched workouts:", fysiken.available_workouts)
     fysiken.reserve_workouts()
+
 
 if __name__ == "__main__":
     main()

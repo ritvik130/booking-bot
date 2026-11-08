@@ -1,10 +1,9 @@
-
 name: Fysiken Booking Bot
 
 'on':
   schedule:
-    - cron: "57 10 * * *"
-    - cron: "57 9 * * *"
+    - cron: "40 9 * * *"   # 11:40 Stockholm in summer (CEST)
+    - cron: "40 10 * * *"  # 11:40 Stockholm in winter (CET)
   workflow_dispatch:
 
 permissions:
@@ -12,11 +11,12 @@ permissions:
 
 concurrency:
   group: fysiken-booking
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   booking:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -26,6 +26,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements.txt

@@ -2,7 +2,7 @@ name: Fysiken Booking Bot
 
 'on':
   schedule:
-    - cron: "50 12 * * *"  
+    - cron: "50 11 * * *"  
       timezone: "Europe/Stockholm"
   workflow_dispatch:
 

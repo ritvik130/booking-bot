@@ -2,8 +2,8 @@ name: Fysiken Booking Bot
 
 'on':
   schedule:
-    - cron: "40 9 * * *"   # 11:40 Stockholm in summer (CEST)
-    - cron: "40 10 * * *"  # 11:40 Stockholm in winter (CET)
+    - cron: "50 11 * * *"  
+    timezone: "Europe/Stockholm"
   workflow_dispatch:
 
 permissions:
